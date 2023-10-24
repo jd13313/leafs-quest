@@ -6,12 +6,11 @@ class Boot extends Phaser.Scene {
   }
 
   preload() {
-    const leafSpriteDimensions = { frameWidth: 16, frameHeight: 16 };
+    const leafSpriteDimensions = { frameWidth: 11, frameHeight: 16 };
 
     this.load.spritesheet('leafWalkX', 'spritesheets/leaf/walk-x.png', leafSpriteDimensions);
-    this.load.image('leafIdleUp', 'spritesheets/leaf/idle-y-up.png');
-    this.load.image('leafIdleDown', 'spritesheets/leaf/idle-y-down.png');
-    this.load.image('leafIdleX', 'spritesheets/leaf/idle-x.png');
+    this.load.spritesheet('leafWalkYUp', 'spritesheets/leaf/walk-y-up.png', leafSpriteDimensions);
+    this.load.spritesheet('leafWalkYDown', 'spritesheets/leaf/walk-y-down.png', leafSpriteDimensions);
 
     this.game.config.textStyles = {
       default: {
