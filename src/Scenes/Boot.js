@@ -12,6 +12,8 @@ class Boot extends Phaser.Scene {
     this.load.spritesheet('leafWalkYUp', 'spritesheets/leaf/walk-y-up.png', leafSpriteDimensions);
     this.load.spritesheet('leafWalkYDown', 'spritesheets/leaf/walk-y-down.png', leafSpriteDimensions);
 
+    this.load.image('grass', 'grass.png');
+
     this.game.config.textStyles = {
       default: {
         fontFamily: 'Amatic SC',

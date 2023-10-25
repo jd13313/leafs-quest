@@ -13,6 +13,8 @@
   },
   "dependencies": {
     "phaser": "^3.60.0",
+    "sass": "^1.69.4",
+    "sass-loader": "^13.3.2",
     "terser": "^5.22.0",
     "webfontloader": "^1.6.28"
   }

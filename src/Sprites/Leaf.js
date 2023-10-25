@@ -1,71 +1,89 @@
-class Leaf extends Phaser.Physics.Arcade.Sprite {
+import Entity from '../Entity.js';
+class Leaf extends Entity {
     constructor(scene, x, y) {
         super(scene, x, y, 'leafWalkYDown');
-        this.setFrame(1);
         this.scene.add.existing(this);
-        this.setupSprite();
+        this.setFrame(1);
         this.setScale(2);
-        this.previousCoordinates = { x, y };
-    }
 
-    setupSprite() {
-        this.anims.create({
+        const frameRate = 20;
+        const anims = scene.anims;
+
+        // Leaf walks along the X axis
+        anims.create({
             key: 'leafWalkXAnim',
-            frames: this.anims.generateFrameNumbers('leafWalkX', { start: 0, end: 2 }),
-            frameRate: 10,
+            frames: anims.generateFrameNumbers('leafWalkX', { start: 0, end: 2 }),
+            frameRate,
             repeat: 1
         });
-        this.anims.create({
-            key: 'leafWalkYUpAnim',
-            frames: this.anims.generateFrameNumbers('leafWalkYUp', { start: 0, end: 2 }),
-            frameRate: 10,
-            repeat: 1,
-        })
 
-        this.anims.create({
-            key: 'leafWalkYDownAnim',
-            frames: this.anims.generateFrameNumbers('leafWalkYDown', { start: 0, end: 2 }),
-            frameRate: 10,
+        // Leaf walks up the Y axis
+        anims.create({
+            key: 'leafWalkYUpAnim',
+            frames: anims.generateFrameNumbers('leafWalkYUp', { start: 0, end: 2 }),
+            frameRate,
             repeat: 1,
-        })
+        });
+
+        // Leaf walks down the Y axis
+        anims.create({
+            key: 'leafWalkYDownAnim',
+            frames: anims.generateFrameNumbers('leafWalkYDown', { start: 0, end: 2 }),
+            frameRate,
+            repeat: 1,
+        });
+
+        const { LEFT, RIGHT, UP, DOWN, W, A, S, D } = Phaser.Input.Keyboard.KeyCodes;
+        this.keys = scene.input.keyboard.addKeys({
+            left: LEFT,
+            right: RIGHT,
+            up: UP,
+            down: DOWN,
+            w: W,
+            a: A,
+            s: S,
+            d: D
+        });
     }
 
-    moveInDirection(direction) {
-        const distance = 2;
-        this.lastFacingDirection = direction;
+    update() {
+        const {keys} = this;
+        const speed = 100;
+        const prevVelocity = this.body.velocity.clone();
 
-        // Up / Down
-        if (['up', 'down'].includes(direction)) {
+        this.body.setVelocity(0);
 
-            if (direction === 'up') {
-                this.anims.play('leafWalkYUpAnim', true);
-                this.y -= distance;
-            } else {
-                this.anims.play('leafWalkYDownAnim', true);
-                this.y += distance;
-            }
-
-            return;
+        // Movement
+        if(keys.left.isDown || keys.a.isDown) {
+            this.body.setVelocityX(-speed);
+        } else if(keys.right.isDown || keys.d.isDown) {
+            this.body.setVelocityX(speed);
         }
 
-        // Left / Right
-        if (['left', 'right'].includes(direction)) {
+        if(keys.up.isDown || keys.w.isDown) {
+            this.body.setVelocityY(-speed);
+        } else if(keys.down.isDown || keys.s.isDown) {
+            this.body.setVelocityY(speed);
+        }
+
+        this.body.velocity.normalize().scale(speed);
+    
+        // Animation
+
+        if(keys.left.isDown || keys.a.isDown) {
             this.anims.play('leafWalkXAnim', true);
-
-            if (direction === 'left') {
-                this.flipX = false;
-                this.x -= distance;
-            } else {
-                this.flipX = true;
-                this.x += distance;
-            }
-
-            return;
+            this.flipX = false;
+        } else if(keys.right.isDown || keys.d.isDown) {
+            this.anims.play('leafWalkXAnim', true);
+            this.flipX = true;
+        } else if(keys.up.isDown || keys.w.isDown) {
+            this.anims.play('leafWalkYUpAnim', true);
+        } else if(keys.down.isDown || keys.s.isDown) {
+            this.anims.play('leafWalkYDownAnim', true);
+        } else {
+            this.anims.stop();
+            this.setFrame(1);
         }
-        
-        
-        this.anims.stop();
-        this.setFrame(1);
     }
 }
 

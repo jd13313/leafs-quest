@@ -6,16 +6,20 @@ class Game extends Phaser.Scene {
     super('Game');
   }
 
+  preload() {
+    this.cursors;
+    this.leaf;
+    this.keys;
+  }
+
   create() {
+    this.add.tileSprite(0, 0, this.game.config.width, this.game.config.height, 'grass').setOrigin(0, 0);
     this.leaf = new Leaf(this, 100, 100);
-    this.cursors = this.input.keyboard.createCursorKeys();
+    this.cameras.main.startFollow(this.leaf, true, 0.05, 0.05);
   }
 
   update() {
-    let direction = Object.entries(this.cursors).find(([, cursor]) => cursor.isDown);
-
-    direction = direction ? direction[0] : null;
-    this.leaf.moveInDirection(direction);
+    this.leaf.update();
   }
 }
 
