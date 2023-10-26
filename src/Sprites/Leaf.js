@@ -5,10 +5,22 @@ class Leaf extends Entity {
         this.scene.add.existing(this);
         this.setFrame(1);
         this.setScale(2);
+        this.prepareAnimations();
+        this.keys = scene.input.keyboard.addKeys('W,A,S,D,UP,DOWN,LEFT,RIGHT');
+    }
 
+    update() {
+        const { keys } = this;
+        const keysPressed = Object.entries(keys).filter(([, keyData]) => keyData.isDown);
+
+        this.handleMovement(keysPressed);
+        this.handleMovementAnimation(keysPressed);
+    }
+
+    prepareAnimations() {
         const frameRate = 20;
-        const anims = scene.anims;
-
+        const anims = this.scene.anims;
+        
         // Leaf walks along the X axis
         anims.create({
             key: 'leafWalkXAnim',
@@ -32,57 +44,70 @@ class Leaf extends Entity {
             frameRate,
             repeat: 1,
         });
-
-        const { LEFT, RIGHT, UP, DOWN, W, A, S, D } = Phaser.Input.Keyboard.KeyCodes;
-        this.keys = scene.input.keyboard.addKeys({
-            left: LEFT,
-            right: RIGHT,
-            up: UP,
-            down: DOWN,
-            w: W,
-            a: A,
-            s: S,
-            d: D
-        });
     }
 
-    update() {
-        const {keys} = this;
+    handleMovement(keysPressed) {
         const speed = 100;
         const prevVelocity = this.body.velocity.clone();
 
         this.body.setVelocity(0);
 
-        // Movement
-        if(keys.left.isDown || keys.a.isDown) {
-            this.body.setVelocityX(-speed);
-        } else if(keys.right.isDown || keys.d.isDown) {
-            this.body.setVelocityX(speed);
-        }
-
-        if(keys.up.isDown || keys.w.isDown) {
-            this.body.setVelocityY(-speed);
-        } else if(keys.down.isDown || keys.s.isDown) {
-            this.body.setVelocityY(speed);
+        if(keysPressed.length){
+            keysPressed.forEach(([keyName]) => {
+                switch(keyName) {
+                    case 'LEFT':
+                    case 'A':
+                        this.body.setVelocityX(-speed);
+                        break;
+                    case 'RIGHT':
+                    case 'D':
+                        this.body.setVelocityX(speed);
+                        break;
+                    case 'UP':
+                    case 'W':
+                        this.body.setVelocityY(-speed);
+                        break;
+                    case 'DOWN':
+                    case 'S':
+                        this.body.setVelocityY(speed);
+                        break;
+                    default:
+                        break;
+                }
+            });
         }
 
         this.body.velocity.normalize().scale(speed);
-    
-        // Animation
+    }
 
-        if(keys.left.isDown || keys.a.isDown) {
-            this.anims.play('leafWalkXAnim', true);
-            this.flipX = false;
-        } else if(keys.right.isDown || keys.d.isDown) {
-            this.anims.play('leafWalkXAnim', true);
-            this.flipX = true;
-        } else if(keys.up.isDown || keys.w.isDown) {
-            this.anims.play('leafWalkYUpAnim', true);
-        } else if(keys.down.isDown || keys.s.isDown) {
-            this.anims.play('leafWalkYDownAnim', true);
-        } else {
-            this.anims.stop();
-            this.setFrame(1);
+    handleMovementAnimation(keysPressed) {
+        if(keysPressed.length) {
+            keysPressed.forEach(([keyName]) => {
+                switch(keyName) {
+                    case 'LEFT':
+                    case 'A':
+                        this.anims.play('leafWalkXAnim', true);
+                        this.flipX = false;
+                        break;
+                    case 'RIGHT':
+                    case 'D':
+                        this.anims.play('leafWalkXAnim', true);
+                        this.flipX = true;
+                        break;
+                    case 'UP':
+                    case 'W':
+                        this.anims.play('leafWalkYUpAnim', true);
+                        break;
+                    case 'DOWN':
+                    case 'S':
+                        this.anims.play('leafWalkYDownAnim', true);
+                        break;
+                    default:
+                        this.anims.stop();
+                        this.setFrame(1);
+                        break;
+                }
+            });
         }
     }
 }
