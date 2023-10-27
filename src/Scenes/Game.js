@@ -4,8 +4,6 @@ import Leaf from '../Sprites/Leaf';
 class Game extends Phaser.Scene {
   constructor() {
     super('Game');
-    this.encounterActive = false;
-    this.encountersAllowed = true;
   }
 
   preload() {
@@ -18,10 +16,12 @@ class Game extends Phaser.Scene {
     this.add.tileSprite(0, 0, this.game.config.width, this.game.config.height, 'grass').setOrigin(0, 0);
     this.leaf = new Leaf(this, 100, 100);
     this.cameras.main.startFollow(this.leaf, true, 0.05, 0.05);
+
+    const { triggerBattleImmediately } = this.game.config.debugOptions;
     this.triggerTimer = this.time.addEvent({
       callback: this.encounterCheckCallback,
       callbackScope: this,
-      delay: 3000,
+      delay: triggerBattleImmediately ? 1 : 3000,
       loop: true
     });
   }
@@ -31,16 +31,17 @@ class Game extends Phaser.Scene {
   }
 
   encounterCheckCallback() {
-    if (this.encounterActive || !this.encountersAllowed) return;
-    console.log('Encounter check');
+    if (!this.leaf.allowEncounters || this.leaf.encounterActive) return;
 
-    const threshold = 30;
+    const { triggerBattleImmediately } = this.game.config.debugOptions;
+    
+    const threshold = triggerBattleImmediately ? 1 : 40;
     const randomValue = Phaser.Math.Between(1, 100);
 
     if (threshold <= randomValue) {
-      //this.encountersAllowed = false;
-      //this.encounterActive = true;
-      console.log('Encounter triggered!');
+      this.leaf.encounterActive = true;
+      this.leaf.allowEncounters = false;
+      this.scene.launch('Battle');
     }
   }
 }

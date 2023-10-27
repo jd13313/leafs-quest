@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import WebFontLoader from 'webfontloader';
 import Boot from './src/Scenes/Boot';
 import Game from './src/Scenes/Game';
+import Battle from './src/Scenes/Battle';
 import './src/style.scss'
 
 const debugOptions = {
@@ -31,6 +32,7 @@ const config = {
   scene: [
     Boot,
     Game,
+    Battle
   ],
 }
 

@@ -7,6 +7,8 @@ class Leaf extends Entity {
         this.setScale(2);
         this.prepareAnimations();
         this.keys = scene.input.keyboard.addKeys('W,A,S,D,UP,DOWN,LEFT,RIGHT');
+        this.allowEncounters = false;
+        this.encounterActive = false;
     }
 
     update() {
@@ -53,6 +55,7 @@ class Leaf extends Entity {
         this.body.setVelocity(0);
 
         if(keysPressed.length){
+            this.allowEncounters = true;
             keysPressed.forEach(([keyName]) => {
                 switch(keyName) {
                     case 'LEFT':
@@ -75,6 +78,8 @@ class Leaf extends Entity {
                         break;
                 }
             });
+        } else {
+            this.allowEncounters = false;
         }
 
         this.body.velocity.normalize().scale(speed);
