@@ -7,7 +7,7 @@ import './src/style.scss'
 
 const debugOptions = {
   phsyics: false,
-  triggerBattleImmediately: false,
+  triggerBattleImmediately: true,
 };
 
 const config = {
@@ -40,6 +40,7 @@ WebFontLoader.load({
   google: {
     families: [
       'Amatic SC',
+      'Pixelify Sans'
     ]
   },
   active: () => {

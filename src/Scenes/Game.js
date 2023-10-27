@@ -24,6 +24,8 @@ class Game extends Phaser.Scene {
       delay: triggerBattleImmediately ? 1 : 3000,
       loop: true
     });
+
+    this.battleStartSound = this.sound.add('battleStart');
   }
 
   update() {
@@ -35,13 +37,18 @@ class Game extends Phaser.Scene {
 
     const { triggerBattleImmediately } = this.game.config.debugOptions;
     
-    const threshold = triggerBattleImmediately ? 1 : 40;
+    const threshold = 40;
     const randomValue = Phaser.Math.Between(1, 100);
 
     if (threshold <= randomValue) {
       this.leaf.encounterActive = true;
       this.leaf.allowEncounters = false;
-      this.scene.launch('Battle');
+      
+      this.battleStartSound.play();
+      this.cameras.main.fadeOut(500, 0, 0, 0);
+      this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, (cam, effect) => {
+        this.scene.launch('Battle');
+      });
     }
   }
 }

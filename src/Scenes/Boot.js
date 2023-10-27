@@ -15,10 +15,11 @@ class Boot extends Phaser.Scene {
     this.load.image('grass', 'grass.png');
     this.load.image('leafCorner', 'leafCorner.png');
 
+    this.load.audio('battleStart', 'sounds/battle-start.mp3');
+
     this.game.config.textStyles = {
       default: {
-        fontFamily: 'Amatic SC',
-        fill: '#333'
+        fontFamily: 'Pixelify Sans'
       }
     }
   }
