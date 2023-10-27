@@ -13,6 +13,7 @@ class Boot extends Phaser.Scene {
     this.load.spritesheet('leafWalkYDown', 'spritesheets/leaf/walk-y-down.png', leafSpriteDimensions);
 
     this.load.image('grass', 'grass.png');
+    this.load.image('leafCorner', 'leafCorner.png');
 
     this.game.config.textStyles = {
       default: {
