@@ -4,7 +4,10 @@ import Boot from './src/Scenes/Boot';
 import Game from './src/Scenes/Game';
 import './src/style.scss'
 
-const debugEnabled = false;
+const debugOptions = {
+  phsyics: false,
+  triggerBattleImmediately: false,
+};
 
 const config = {
   type: Phaser.AUTO,
@@ -21,7 +24,7 @@ const config = {
   physics: {
     default: 'arcade',
     arcade: {
-      debug: debugEnabled,
+      debug: debugOptions.phsyics,
       gravity: { y: 0 }
     }
   },
@@ -29,7 +32,6 @@ const config = {
     Boot,
     Game,
   ],
-  textStyles: {}
 }
 
 WebFontLoader.load({
@@ -40,5 +42,7 @@ WebFontLoader.load({
   },
   active: () => {
     const game = new Phaser.Game(config);
+    game.config.debugOptions = debugOptions;
+    game.config.textStyle = {};
   }
 });
