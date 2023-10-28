@@ -1,9 +1,11 @@
 import Phaser from 'phaser';
+import critters from '../critter-list.json';
 
 class Battle extends Phaser.Scene {
     constructor() {
         super('Battle');
         this.commonDimensions;
+        this.opponent;
     }
 
     create() {
@@ -25,6 +27,8 @@ class Battle extends Phaser.Scene {
         this.buildHeaderBox();
         this.buildCombatBox();
         this.buildActionBoxes();
+        this.selectRandomOpponent();
+        
     }
 
     preload() {
@@ -33,6 +37,16 @@ class Battle extends Phaser.Scene {
 
     update() {
 
+    }
+
+    selectRandomOpponent() {
+        const randomIndex = Phaser.Math.Between(0, critters.length - 1);
+        const { width:gameWidth, height:gameHeight } = this.sys.game.config;
+
+        this.opponent = this.add.sprite(1, 1, critters[randomIndex]);
+        this.opponent.x = gameWidth - 300;
+        this.opponent.y = 450;
+        this.opponent.setScale(10);
     }
 
     buildHeaderBox() {

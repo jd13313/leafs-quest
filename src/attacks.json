@@ -1,0 +1,8 @@
+{
+    "stab": {
+        "name": "Stab",
+        "type": "physical",
+        "hitChance": 0.5,
+        "baseDamage": 10
+    }
+}

@@ -1,10 +1,10 @@
-import Entity from '../Entity.js';
+import Entity from './Entity.js';
 class Leaf extends Entity {
     constructor(scene, x, y) {
         super(scene, x, y, 'leafWalkYDown');
         this.scene.add.existing(this);
         this.setFrame(1);
-        this.setScale(2);
+        this.setScale(3);
         this.prepareAnimations();
         this.keys = scene.input.keyboard.addKeys('W,A,S,D,UP,DOWN,LEFT,RIGHT');
         this.allowEncounters = false;
