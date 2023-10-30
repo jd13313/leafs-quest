@@ -4,5 +4,17 @@
         "type": "physical",
         "hitChance": 0.5,
         "baseDamage": 10
+    },
+    "bite": {
+        "name": "Bite",
+        "type": "physical",
+        "hitChance": 0.75,
+        "baseDamage": 15
+    },
+    "dig": {
+        "name": "Dig",
+        "type": "physical",
+        "hitChance": 1,
+        "baseDamage": 20
     }
 }

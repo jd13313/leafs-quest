@@ -1,5 +1,7 @@
 import Phaser from "phaser";
 import Leaf from '../Sprites/Leaf';
+import CicadaNymph from '../Sprites/critters/CicadaNymph';
+import Ant from '../Sprites/critters/Ant';
 
 class Game extends Phaser.Scene {
   constructor() {
@@ -13,6 +15,10 @@ class Game extends Phaser.Scene {
   }
 
   create() {
+    this.registry.set('critterList',  {
+      CicadaNymph,
+      Ant
+    });
     this.add.tileSprite(0, 0, this.game.config.width, this.game.config.height, 'grass').setOrigin(0, 0);
     this.leaf = new Leaf(this, 100, 100);
     this.cameras.main.startFollow(this.leaf, true, 0.05, 0.05);
@@ -47,7 +53,9 @@ class Game extends Phaser.Scene {
       this.battleStartSound.play();
       this.cameras.main.fadeOut(500, 0, 0, 0);
       this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, (cam, effect) => {
-        this.scene.launch('Battle');
+        this.scene.launch('Battle', {
+          leaf: this.leaf
+        });
       });
     }
   }

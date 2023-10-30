@@ -16,6 +16,7 @@ class Boot extends Phaser.Scene {
     this.load.image('leafCorner', 'leafCorner.png');
 
     this.load.image('cicadaNymph', 'critters/cicada-nymph.png');
+    this.load.image('ant', 'critters/ant.png');
 
     this.load.audio('battleStart', 'sounds/battle-start.mp3');
 

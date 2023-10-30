@@ -11,6 +11,7 @@ class Critter extends Entity {
         this.setData('speed', 10);
         this.setData('level', 1);
         this.setData('attacks', []);
+        this.setData('spriteRotation', 0);
 
         this.attacksList = attacksList;
     }

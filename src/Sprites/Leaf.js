@@ -9,6 +9,7 @@ class Leaf extends Entity {
         this.keys = scene.input.keyboard.addKeys('W,A,S,D,UP,DOWN,LEFT,RIGHT');
         this.allowEncounters = false;
         this.encounterActive = false;
+        this.setData('critterList', ['CicadaNymph', 'Ant']);
     }
 
     update() {

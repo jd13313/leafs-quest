@@ -6,9 +6,18 @@ class Battle extends Phaser.Scene {
         super('Battle');
         this.commonDimensions;
         this.opponent;
+        this.rounds = 0;
+        this.playersTurn = true;
+        this.playerCritter;
+        this.critterList;
+    }
+
+    init(data) {
+        this.leaf = data.leaf;
     }
 
     create() {
+        this.critterList = this.registry.get('critterList');
         this.cameras.main.fadeIn(500, 0, 0, 0);
         this.cameras.main.setBackgroundColor(0x9badb7);
 
@@ -21,13 +30,15 @@ class Battle extends Phaser.Scene {
             twoFifthsHeight: this.sys.game.config.height * .40,
             oneTenthsHeight: this.sys.game.config.height * .10
         }
-
         this.graphics.lineStyle(5, 0x004012);
     
         this.buildHeaderBox();
         this.buildCombatBox();
         this.buildActionBoxes();
+        this.setPlayerCritter();
         this.selectRandomOpponent();
+        this.drawText();
+
         
     }
 
@@ -39,14 +50,67 @@ class Battle extends Phaser.Scene {
 
     }
 
+    setPlayerCritter() {
+        const playerCritterSpriteKey = this.leaf.getData('critterList')[0];
+
+        this.playerCritter = new this.critterList[playerCritterSpriteKey](this, 1, 1);
+        this.playerCritter.x = 150;
+        this.playerCritter.y = 220;
+        this.playerCritter.setScale(-4, 4);
+    }
+
     selectRandomOpponent() {
-        const randomIndex = Phaser.Math.Between(0, critters.length - 1);
+        const critterKeys = Object.keys(this.critterList);
+        const randomIndex = Phaser.Math.Between(0, critterKeys.length - 1);
         const { width:gameWidth, height:gameHeight } = this.sys.game.config;
 
-        this.opponent = this.add.sprite(1, 1, critters[randomIndex]);
-        this.opponent.x = gameWidth - 300;
-        this.opponent.y = 450;
-        this.opponent.setScale(10);
+        this.opponent = new this.critterList[critterKeys[randomIndex]](this, 1, 1);
+        this.opponent.x = gameWidth - 150;
+        this.opponent.y = 200;
+        this.opponent.setScale(4);
+    }
+
+    drawText() {
+        const playerAttacksHeader = this.add.text(
+             20,
+             360,
+            'Your Attacks',
+            {
+                ...this.game.config.textStyles.default,
+                fontSize: '25px',
+                fontWeight: 'bold',
+                color: '#ffffff'
+            }
+        );
+
+        this.playerCritter.getData('attacks').forEach((attack, index) => {
+            const attackText = this.add.text(
+                20,
+                400 + (index * 40),
+                attack.name,
+                {
+                    ...this.game.config.textStyles.default,
+                    fontSize: '20px',
+                    fontWeight: 'bold',
+                    color: '#ffffff'
+                }
+            );
+
+            attackText.setInteractive();
+            attackText.on('pointerdown', () => {
+                this.handleAttack(attack, 'opponent');
+            });
+        });
+    }
+
+    handleAttack(attack, target) {
+        if (target === 'opponent') {
+//            this.opponent.setData('health', this.opponent.getData('health') - attack.power);
+            // TODO: Come up with equation for handle attacks. Maybe just do a D&D type thing. One roll for hit (+ speed modifier, - defense modifier), one for damage (+attack modifier).
+        }
+
+
+        this.playersTurn = !this.playersTurn;
     }
 
     buildHeaderBox() {

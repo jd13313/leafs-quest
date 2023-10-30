@@ -15,8 +15,8 @@ const config = {
   scale: {
     parent: 'game-container',
     zoom: 1,
-    width: window.innerWidth,
-    height: window.innerHeight,
+    width: 800,
+    height: 600,
     autoCenter: Phaser.DOM.CENTER_BOTH,
     mode: Phaser.Scale.FIT
   },
