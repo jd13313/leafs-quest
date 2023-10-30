@@ -23,6 +23,7 @@ class Critter extends Entity {
             }
         }));
     }
+    
 }
 
 export default Critter;

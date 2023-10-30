@@ -39,7 +39,7 @@ const config = {
 WebFontLoader.load({
   google: {
     families: [
-      'Amatic SC',
+      'Open Sans',
       'Pixelify Sans'
     ]
   },

@@ -5,11 +5,12 @@ class Battle extends Phaser.Scene {
     constructor() {
         super('Battle');
         this.commonDimensions;
-        this.opponent;
+        this.opponentCritter;
         this.rounds = 0;
         this.playersTurn = true;
         this.playerCritter;
         this.critterList;
+        this.battleLog = [];
     }
 
     init(data) {
@@ -47,7 +48,7 @@ class Battle extends Phaser.Scene {
     }
 
     update() {
-
+        this.battleLogText.setText(this.battleLog.join('\n'));
     }
 
     setPlayerCritter() {
@@ -64,10 +65,10 @@ class Battle extends Phaser.Scene {
         const randomIndex = Phaser.Math.Between(0, critterKeys.length - 1);
         const { width:gameWidth, height:gameHeight } = this.sys.game.config;
 
-        this.opponent = new this.critterList[critterKeys[randomIndex]](this, 1, 1);
-        this.opponent.x = gameWidth - 150;
-        this.opponent.y = 200;
-        this.opponent.setScale(4);
+        this.opponentCritter = new this.critterList[critterKeys[randomIndex]](this, 1, 1);
+        this.opponentCritter.x = gameWidth - 150;
+        this.opponentCritter.y = 200;
+        this.opponentCritter.setScale(4);
     }
 
     drawText() {
@@ -90,6 +91,7 @@ class Battle extends Phaser.Scene {
                 attack.name,
                 {
                     ...this.game.config.textStyles.default,
+                    fontFamily: 'Open Sans',
                     fontSize: '20px',
                     fontWeight: 'bold',
                     color: '#ffffff'
@@ -101,12 +103,47 @@ class Battle extends Phaser.Scene {
                 this.handleAttack(attack, 'opponent');
             });
         });
+        
+
+        const battleLogHeader = this.add.text( 
+            this.commonDimensions.halfWidth + 42, 
+            360,
+            'Battle Log', 
+            {
+                ...this.game.config.textStyles.default,
+                fontSize: '25px',
+                fontWeight: 'bold',
+            }
+        );
+
+        this.battleLogText = this.add.text(
+            this.commonDimensions.halfWidth + 42,
+            400,
+            '',
+            {
+                ...this.game.config.textStyles.default,
+                fontFamily: 'Open Sans',
+                fontSize: '9px'
+            }
+        );
     }
 
     handleAttack(attack, target) {
-        if (target === 'opponent') {
-//            this.opponent.setData('health', this.opponent.getData('health') - attack.power);
-            // TODO: Come up with equation for handle attacks. Maybe just do a D&D type thing. One roll for hit (+ speed modifier, - defense modifier), one for damage (+attack modifier).
+        const attacker = target === 'opponent' ? this.playerCritter : this.opponentCritter;
+        const defender = target === 'opponent' ? this.opponentCritter : this.playerCritter;
+
+        const hitRoll = Phaser.Math.Between(0, 20) + attacker.getData('speed');
+        const dodgeRoll = Phaser.Math.Between(0, 20) + defender.getData('speed');
+
+        if (hitRoll >= dodgeRoll) {
+            let damage = attack.baseDamage + attacker.getData('attack') - defender.getData('defense');
+            damage = damage > 0 ? damage : 1;
+
+            defender.setData('health', defender.getData('health') - damage);
+
+            this.battleLog.push(`${attack.name} does ${damage} damage!`);
+        } else {
+            this.battleLog.push(`${attack.name} misses!`);
         }
 
 
